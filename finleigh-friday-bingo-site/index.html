@@ -31,9 +31,9 @@
   const status = document.getElementById("status");
   const reset = document.getElementById("reset");
 
-  // Load previously saved checked squares
-  let checkedSquares =
-    JSON.parse(localStorage.getItem("finleighFridaySquares")) || [];
+  let checkedSquares = JSON.parse(
+    localStorage.getItem("finleighFridaySquares") || "[]"
+  );
 
   function saveBoard() {
     localStorage.setItem(
@@ -61,7 +61,7 @@
 
     btn.append(check, label);
 
-    // Restore saved state
+    // IMPORTANT: restore saved state on page load
     if (checkedSquares.includes(index)) {
       btn.classList.add("checked");
       btn.setAttribute("aria-pressed", "true");
@@ -80,10 +80,7 @@
         checkedSquares = checkedSquares.filter(i => i !== index);
       }
 
-      btn.setAttribute(
-        "aria-pressed",
-        isChecked ? "true" : "false"
-      );
+      btn.setAttribute("aria-pressed", isChecked ? "true" : "false");
 
       saveBoard();
       updateStatus();
@@ -93,12 +90,13 @@
   });
 
   reset.addEventListener("click", () => {
-    document.querySelectorAll(".square").forEach((btn) => {
+    checkedSquares = [];
+
+    document.querySelectorAll(".square").forEach(btn => {
       btn.classList.remove("checked");
       btn.setAttribute("aria-pressed", "false");
     });
 
-    checkedSquares = [];
     saveBoard();
     updateStatus();
   });
